@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author Ky Kartchner
  */
-public class TestShape {
+public class TestShapeMain {
     public static void main(String[] args) {
         ArrayList<Shape> shapes = new ArrayList<>();
 
