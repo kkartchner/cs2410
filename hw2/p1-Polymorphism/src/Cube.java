@@ -1,22 +1,22 @@
 /**
- * Class definition for a Cube.
+ * Class definition for a Cube. Inherits from Square.
  *
  * @author Ky Kartchner
  */
-public class Cube extends Shape {
+public class Cube extends Square {
     /* Constructors */
     public Cube() {
         this((int) (Math.random() * 19 + 2)); // Random side length between 2 and 20 inclusive
     }
 
     public Cube(double sideLength) {
-        this.setSide(sideLength);
+        super(sideLength); // Set super.side to sideLength by calling super assignment constructor.
     }
 
     /* Overridden Methods */
     @Override
     public double getArea() {
-        return 6.0 * Math.pow(getSide(), 2.0); // Surface area of a cube is 6 times the side length squared.
+        return 6.0 * super.getArea(); // Surface area of a cube is 6 times the side length squared.
     }
 
     @Override

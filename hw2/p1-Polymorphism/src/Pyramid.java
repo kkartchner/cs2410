@@ -10,7 +10,7 @@ public class Pyramid extends Triangle {
     }
 
     public Pyramid(double sideLength) {
-        super(sideLength);
+        super(sideLength); // Set super.side to sideLength by calling super assignment constructor.
     }
 
     /* Overridden Methods */
