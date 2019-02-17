@@ -16,11 +16,11 @@ abstract class Shape {
     }
 
     /* Getters/Setters */
-    public double getSide() {
+    double getSide() {
         return side;
     }
 
-    public void setSide(double side) {
+    void setSide(double side) {
         this.side = side;
     }
 }

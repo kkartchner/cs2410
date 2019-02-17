@@ -5,11 +5,11 @@
  */
 public class Square extends Shape {
     /* Constructors */
-    public Square() {
+    Square() {
         this((int) (Math.random() * 19 + 2)); // Random side length between 2 and 20 inclusive
     }
 
-    public Square(double sideLength) {
+    Square(double sideLength) {
         this.setSide(sideLength);
     }
 

@@ -5,17 +5,17 @@
  */
 public class Triangle extends Shape {
     /* Constructors */
-    public Triangle() {
+    Triangle() {
         this((int) (Math.random() * 19 + 2)); // Random side length between 2 and 20 inclusive
     }
 
-    public Triangle(double sideLength) {
+    Triangle(double sideLength) {
         this.setSide(sideLength);
     }
 
     /* Overridden Methods */
     @Override
-    public double getArea(){
+    public double getArea() {
         // Area of equilateral triangle is sqrt(3)*s^2)/4
         return (Math.sqrt(3.0) * Math.pow(getSide(), 2.0)) / 4.0;
     }

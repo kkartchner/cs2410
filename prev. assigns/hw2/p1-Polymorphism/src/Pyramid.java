@@ -5,11 +5,11 @@
  */
 public class Pyramid extends Triangle {
     /* Constructors */
-    public Pyramid() {
+    Pyramid() {
         this((int) (Math.random() * 19 + 2)); // Random side length between 2 and 20 inclusive
     }
 
-    public Pyramid(double sideLength) {
+    private Pyramid(double sideLength) {
         super(sideLength); // Set super.side to sideLength by calling super assignment constructor.
     }
 

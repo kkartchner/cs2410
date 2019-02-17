@@ -5,11 +5,11 @@
  */
 public class Cube extends Square {
     /* Constructors */
-    public Cube() {
+    Cube() {
         this((int) (Math.random() * 19 + 2)); // Random side length between 2 and 20 inclusive
     }
 
-    public Cube(double sideLength) {
+    private Cube(double sideLength) {
         super(sideLength); // Set super.side to sideLength by calling super assignment constructor.
     }
 
