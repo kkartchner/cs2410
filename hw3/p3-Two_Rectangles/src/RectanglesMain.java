@@ -29,11 +29,12 @@ public class RectanglesMain extends Application {
         double x2 = 35;
         double y2 = 35;
 
-        var rect1 = new MyRectangle(width1, height1, x1, y1, Color.BLUE); // (width, height, x, y)
-        var rect2 = new MyRectangle(width2, height2, x1, y1, Color.RED); // (width, height, x, y)
-
+        var rect1 = new MyRectangle(width1, height1, x1, y1, Color.BLUE); 
+        var rect2 = new MyRectangle(width2, height2, x1, y1, Color.RED);  
+       
         mainPane.getChildren().add(rect1);
         mainPane.getChildren().add(rect2);
+        // Add text object to mainPane
 
         primaryStage.setTitle("Exercise 14_23 - Ky Kartchner");
         primaryStage.setScene(new Scene(mainPane));
