@@ -1,6 +1,8 @@
 package hw5.HangmanGame;
 
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -19,10 +21,13 @@ class Man extends Pane {
     private final double TORSO_LENGTH = 65;
     private final double LEG_LENGTH = 50;
     private final double LINE_THICKNESS = 1;
+
     /* Variables for storing key starting points: */
     private double baseOfHeadY;
     private double hipsY;
     private Point2D endOfRope;
+
+    private int wrongGuessCount;
 
     /**
      * Calls each body part function to construct a man panel object who is "hanging" from the rope at the specified
@@ -32,12 +37,18 @@ class Man extends Pane {
      */
     Man(Point2D endOfRope) {
         this.endOfRope = endOfRope;
-        drawHead();
-        drawLeftArm();
-        drawRightArm();
-        drawTorso();
-        drawLeftLeg();
-        drawRightLeg();
+        wrongGuessCount = 0;
+    }
+
+    public void drawNextBodyPart(){
+        switch (wrongGuessCount++){
+            case 0: drawHead(); break;
+            case 1: drawLeftArm(); break;
+            case 2: drawRightArm(); break;
+            case 3: drawTorso(); break;
+            case 4: drawLeftLeg(); break;
+            case 5: drawRightLeg(); break;
+        }
     }
 
     /**
@@ -86,7 +97,15 @@ class Man extends Pane {
         torso.setStroke(Color.BLACK);
         torso.setStrokeWidth(LINE_THICKNESS);
 
-        super.getChildren().add(torso);
+        ImageView rivalLogo = new ImageView(new Image("hw5/HangmanGame/rivalLogo.png"));
+        rivalLogo.setPreserveRatio(true);
+        rivalLogo.setFitWidth(100);
+
+        rivalLogo.setX(endOfRope.getX() - rivalLogo.getFitWidth() / 2);
+        rivalLogo.setY(baseOfHeadY + rivalLogo.getFitHeight());
+
+
+        super.getChildren().addAll(torso, rivalLogo);
 
     }
 

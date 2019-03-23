@@ -19,19 +19,22 @@ public class HangmanMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Create main pane and specify its size:
-        Pane pane = new Pane();
-        pane.setPrefSize(500, 500);
+        Pane mainPane = new Pane();
+        mainPane.setPrefSize(500, 500);
 
         // Create Gallows and Man panes and add to main pane:
-        Gallows gallows = new Gallows(100, 100);
+        Gallows gallows = new Gallows(0, 20);
         Man man = new Man(gallows.endOfRope());
 
-        pane.getChildren().add(gallows);
-        pane.getChildren().add(man);
+        Board board = new Board("Hello there", 100, 200);
+
+        mainPane.getChildren().addAll(gallows, man, board);
+
+        mainPane.setOnMouseClicked(e -> man.drawNextBodyPart());
 
         // Primary stage setup:
         primaryStage.setTitle("Exercise14_17 - Ky Kartchner");
-        primaryStage.setScene(new Scene(pane));
+        primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
     }
 }
