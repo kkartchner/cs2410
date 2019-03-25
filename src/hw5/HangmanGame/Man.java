@@ -40,6 +40,9 @@ class Man extends Pane {
         wrongGuessCount = 0;
     }
 
+    /**
+     * Draw the next body part determined by the current number of incorrect guesses.
+     */
     public void drawNextBodyPart(){
         switch (wrongGuessCount++){
             case 0: drawHead(); break;
@@ -48,6 +51,9 @@ class Man extends Pane {
             case 3: drawTorso(); break;
             case 4: drawLeftLeg(); break;
             case 5: drawRightLeg(); break;
+            default:
+                   HangmanMain.showEndOfGameDialog("Oh no! You done been strung up!");
+                   break;
         }
     }
 
@@ -97,7 +103,7 @@ class Man extends Pane {
         torso.setStroke(Color.BLACK);
         torso.setStrokeWidth(LINE_THICKNESS);
 
-        ImageView rivalLogo = new ImageView(new Image("hw5/HangmanGame/rivalLogo.png"));
+        ImageView rivalLogo = new ImageView(new Image("/hw5/HangmanGame/rivalLogo.png"));
         rivalLogo.setPreserveRatio(true);
         rivalLogo.setFitWidth(100);
 
