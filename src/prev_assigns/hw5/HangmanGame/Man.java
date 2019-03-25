@@ -1,4 +1,4 @@
-package hw5.HangmanGame;
+package prev_assigns.hw5.HangmanGame;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -40,20 +40,36 @@ class Man extends Pane {
         wrongGuessCount = 0;
     }
 
+    void clear() {
+        super.getChildren().clear();
+        wrongGuessCount = 0;
+    }
+
     /**
      * Draw the next body part determined by the current number of incorrect guesses.
      */
-    public void drawNextBodyPart(){
-        switch (wrongGuessCount++){
-            case 0: drawHead(); break;
-            case 1: drawLeftArm(); break;
-            case 2: drawRightArm(); break;
-            case 3: drawTorso(); break;
-            case 4: drawLeftLeg(); break;
-            case 5: drawRightLeg(); break;
-            default:
-                   HangmanMain.showEndOfGameDialog("Oh no! You done been strung up!");
-                   break;
+    void drawNextBodyPart() {
+        switch (wrongGuessCount++) {
+            case 0:
+                drawHead();
+                break;
+            case 1:
+                drawLeftArm();
+                break;
+            case 2:
+                drawRightArm();
+                break;
+            case 3:
+                drawTorso();
+                break;
+            case 4:
+                drawLeftLeg();
+                break;
+            case 5:
+                drawRightLeg();
+                HangmanMain.board.revealRemainingLetters();
+                HangmanMain.showEndOfGameDialog("Oh no! You done been strung up!");
+                break;
         }
     }
 
@@ -81,6 +97,7 @@ class Man extends Pane {
 
         super.getChildren().add(lArm);
     }
+
     /**
      * Function for creating a Line shape for the right arm.
      */
@@ -103,16 +120,15 @@ class Man extends Pane {
         torso.setStroke(Color.BLACK);
         torso.setStrokeWidth(LINE_THICKNESS);
 
-        ImageView rivalLogo = new ImageView(new Image("/hw5/HangmanGame/rivalLogo.png"));
+        ImageView rivalLogo = new ImageView(new Image(
+                this.getClass().getResource("rivalLogo.png").toExternalForm()));
         rivalLogo.setPreserveRatio(true);
         rivalLogo.setFitWidth(100);
 
         rivalLogo.setX(endOfRope.getX() - rivalLogo.getFitWidth() / 2);
         rivalLogo.setY(baseOfHeadY + rivalLogo.getFitHeight());
 
-
         super.getChildren().addAll(torso, rivalLogo);
-
     }
 
 

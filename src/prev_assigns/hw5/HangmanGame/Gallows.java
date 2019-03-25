@@ -1,4 +1,4 @@
-package hw5.HangmanGame;
+package prev_assigns.hw5.HangmanGame;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
