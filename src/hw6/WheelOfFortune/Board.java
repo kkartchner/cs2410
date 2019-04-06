@@ -1,14 +1,13 @@
-package prev_assigns.hw5.HangmanGame;
+package hw6.WheelOfFortune;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.nio.file.Files;
@@ -25,30 +24,20 @@ class Board extends VBox {
     private String phrase;
     private Text correctnessText;
     private Text[] letterSlots;
+    private TextField textField;
     private ArrayList<Character> unguessedLetters;
-    private final Font mainFont;
-
-    private Man man;
+    private ComboBox<String> comboBox;
 
     /**
-     * Construct a board at the specified layout position.
-     *
-     * @param layoutX The value for LayoutX
-     * @param layoutY The value for LayoutY
-     * @param man     A reference to the man being hanged
+     * Construct a default board.
      */
-    public Board(double layoutX, double layoutY, Man man) {
-        mainFont = new Font("Comic Sans", 20);
-
-        super.setLayoutX(layoutX);
-        super.setLayoutY(layoutY);
+    public Board() {
         super.setStyle("-fx-alignment: center; -fx-pref-width: 200;" +
-                "-fx-pref-height: 150; -fx-border-color: black;");
-
-        this.man = man;
+                "-fx-pref-height: 150;");
 
         loadPhrases();
         loadNewPhrase();
+        comboBox.setVisible(true);
     }
 
     /**
@@ -81,6 +70,7 @@ class Board extends VBox {
 
         super.getChildren().add(correctnessText);
 
+        createComboBox();
         createGuessBox();
     }
 
@@ -91,7 +81,7 @@ class Board extends VBox {
         int randomIndex = (int) (Math.random() * phrases.size());
 
         /* Ensure that the phrase just used is not used again */
-        if (phrase != null && phrase.equals(phrases.get(randomIndex))){ // If the same phrase was picked
+        if (phrase != null && phrase.equals(phrases.get(randomIndex))) { // If the same phrase was picked
             return getRandomPhrase();                 //    Pick another
         } else {
             return phrases.get(randomIndex);          // Else return the randomly selected one
@@ -109,7 +99,7 @@ class Board extends VBox {
 
         for (int i = 0; i < phrase.length(); ++i) {
             Text l = new Text();
-            l.setFont(mainFont);
+            l.setFont(WheelOfFortuneMain.mainFont);
 
             if (phrase.charAt(i) == ' ') {
                 l.setText(" ");
@@ -129,30 +119,25 @@ class Board extends VBox {
         guessBox.setAlignment(Pos.CENTER);
 
         Text text = new Text("Enter a letter: ");
-        text.setFont(mainFont);
+        text.setFont(WheelOfFortuneMain.mainFont);
 
         /* Add textField */
-        TextField textField = new TextField();
+        textField = new TextField();
         textField.setPrefColumnCount(1);
         textField.setMaxWidth(45);
-        textField.setFont(mainFont);
+        textField.setFont(WheelOfFortuneMain.mainFont);
 
         constrainTextField(textField);
 
-        textField.setOnKeyPressed(e -> { // Allow for submitting a guess by hitting the enter key.
-            if (e.getCode() == KeyCode.ENTER) {
-                submitGuessFrom(textField);
-            }
-        });
+//        textField.setOnKeyPressed(e -> { // Allow for submitting a guess by hitting the enter key.
+//            if (e.getCode() == KeyCode.ENTER) {
+//                submitGuess();
+//            }
+//        });
 
         guessBox.getChildren().addAll(text, textField);
 
-        /* Add button */
-        Button button = new Button("Guess");
-        button.setFont(mainFont);
-        button.setOnMouseClicked(e -> submitGuessFrom(textField));
-
-        super.getChildren().addAll(guessBox, button);
+        super.getChildren().addAll(guessBox);
 
     }
 
@@ -178,13 +163,13 @@ class Board extends VBox {
     /**
      * Submit the letter currently in the specified TextField if there is one. Otherwise prompt
      * the user to enter one.
-     *
-     * @param textField The textfield to check
      */
-    private void submitGuessFrom(TextField textField) {
+    boolean submitGuess() {
         if (textField.getText().length() > 0) {
             guessLetter(textField.getText().charAt(0));
+            return true;
         }
+        return false;
     }
 
     /**
@@ -210,17 +195,17 @@ class Board extends VBox {
             correctnessText.setStyle("-fx-font: 18 Calibri; -fx-fill: green; -fx-rotate: 15");
 
             if (allLettersGuessed()) {
-                HangmanMain.showEndOfGameDialog("You have shown mercy to the rival! You're a true winner!");
+                comboBox.setVisible(true);
             }
         } else {
             correctnessText.setText("Incorrect");
             correctnessText.setStyle("-fx-font: 18 Calibri; -fx-fill: red; -fx-rotate: -15");
-            this.man.drawNextBodyPart();
         }
     }
 
     /**
      * Check to see of all the letters have been guessed.
+     *
      * @return
      */
     private boolean allLettersGuessed() {
@@ -230,6 +215,19 @@ class Board extends VBox {
             }
         }
         return true;
+    }
+
+    private void createComboBox() {
+        comboBox = new ComboBox<>(FXCollections.observableArrayList("Reset Board"));
+        comboBox.setVisible(false);
+        super.getChildren().add(comboBox);
+
+        comboBox.valueProperty().addListener((ov, oldVal, newVal) -> {
+            if (newVal.equals("Reset Board")) {
+                this.loadNewPhrase();
+                comboBox.setVisible(false);
+            }
+        });
     }
 
     void revealRemainingLetters() {
