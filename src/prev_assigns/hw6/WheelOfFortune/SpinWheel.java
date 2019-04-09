@@ -1,4 +1,4 @@
-package hw6.WheelOfFortune;
+package prev_assigns.hw6.WheelOfFortune;
 
 import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
@@ -12,12 +12,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-
-public class SpinWheel extends Pane {
+/**
+ * Combination of wheel and marker to create a SpinWheel.
+ *
+ * @author Ky Kartchner
+ */
+class SpinWheel extends Pane {
     private Wheel wheel;
     private Marker marker;
 
-    public SpinWheel(double radius) {
+    SpinWheel(double radius) {
         wheel = new Wheel(radius);
         marker = new Marker(88, 16, 13);
 
@@ -25,13 +29,20 @@ public class SpinWheel extends Pane {
 
     }
 
-    public void spin(EventHandler<ActionEvent> onFinished) {
+    void spin(EventHandler<ActionEvent> onFinished) {
         wheel.spin(onFinished);
+    }
+
+    int getMarkedScore() {
+        return wheel.getMarkedPoints();
     }
 }
 
+/**
+ * Atributes and functions for wheel marker.
+ */
 class Marker extends Polygon {
-    public Marker(double posX, double posY, double sideLength) {
+    Marker(double posX, double posY, double sideLength) {
         super(posX, posY,
                 posX, posY - sideLength,
                 posX + sideLength, posY);
@@ -43,11 +54,20 @@ class Marker extends Polygon {
     }
 }
 
+/**
+ * Attributes and functions for wheel itself.
+ */
 class Wheel extends Pane {
     private Circle borderCircle;
     private Segment[] segments;
+    private int markedPoints;
 
-    public Wheel(double radius) {
+    /**
+     * Construct a wheel of provided radius.
+     *
+     * @param radius Radius of wheel
+     */
+    Wheel(double radius) {
         borderCircle = new Circle(radius, Color.TRANSPARENT);
         borderCircle.setStroke(Color.BLACK);
         borderCircle.centerXProperty().bind(super.widthProperty()
@@ -62,6 +82,12 @@ class Wheel extends Pane {
         generateSegments(8, pointValues);
     }
 
+    /**
+     * Generate the segment lines and points of the wheel.
+     *
+     * @param segNum      Number of segments to assign
+     * @param pointValues The point values to use for the segments
+     */
     private void generateSegments(int segNum, int[] pointValues) {
         segments = new Segment[segNum];
         for (int i = 0; i < segNum; ++i) {
@@ -71,14 +97,17 @@ class Wheel extends Pane {
             double numberRadius = borderCircle.getRadius() * .75;
             double theta = 2 * i * Math.PI / segNum;
 
+            double offset = -Math.PI / 8;
+
             segments[i] = new Segment(theta, pointValues[i]);
 
             text.xProperty().bind(borderCircle.centerXProperty()
-                    .add(numberRadius * Math.cos(theta) - text.getLayoutBounds().getWidth() / 2));
-            text.yProperty().bind(borderCircle.centerYProperty().add(numberRadius * Math.sin(theta)));
+                    .add(numberRadius * Math.cos(theta + offset) - text.getLayoutBounds().getWidth() / 2));
+            text.yProperty().bind(borderCircle.centerYProperty().add(numberRadius * Math.sin(theta + offset)));
 
             super.getChildren().add(text);
 
+            /* Create line segments */
             Line sliceLine = new Line();
             sliceLine.startXProperty().bind(borderCircle.centerXProperty());
             sliceLine.startYProperty().bind(borderCircle.centerYProperty());
@@ -88,52 +117,63 @@ class Wheel extends Pane {
             sliceLine.endYProperty().bind(borderCircle.centerYProperty()
                     .add(borderCircle.getRadius() * Math.sin(theta)));
 
-//            Label prizePoints = new Label(Integer.toString(points[i]), sliceLine);
-
             super.getChildren().addAll(sliceLine);
-
-        }
-
-        for (Segment s : segments) {
-            System.out.println(s.toString());
         }
     }
 
-    public void spin(EventHandler<ActionEvent> onFinished) {
-        double randomSeconds = 3 + Math.random() * 10;
+    /**
+     * Spin the wheel at least ones around.
+     *
+     * @param onFinished Action to perform once spin is complete.
+     */
+    void spin(EventHandler<ActionEvent> onFinished) {
+        int randomIndex = (int) (Math.random() * segments.length);
+        double randomToAngle = -Math.toDegrees(segments[randomIndex].getTheta());
+        markedPoints = segments[randomIndex].getPointValue();
 
-        RotateTransition rotateTransition = new RotateTransition(new Duration(randomSeconds * 1000));
-        rotateTransition.setNode(this);
+        RotateTransition initialRotation = new RotateTransition(new Duration(1000));
+        RotateTransition randomRotation = new RotateTransition(new Duration(1000));
 
-        rotateTransition.playFromStart();
+        initialRotation.setByAngle(-360.0); // Ensure at least one full spin
+        initialRotation.setNode(this);
 
+        randomRotation.setToAngle(randomToAngle);
+        randomRotation.setNode(this);
+        randomRotation.setOnFinished(onFinished);
 
-        rotateTransition.setOnFinished(onFinished);
+        initialRotation.setOnFinished(e -> {
+            super.setRotate(super.getRotate() + 360);
+            randomRotation.playFromStart();
+        });
+        initialRotation.playFromStart();
+    }
+
+    /**
+     * @return Get the points that the marker points at.
+     */
+    int getMarkedPoints() {
+        return markedPoints;
     }
 }
 
+
+/**
+ * Class for storing segment angles and pointValues.
+ */
 class Segment {
     private double theta;
     private int pointValue;
 
-    public Segment(double theta, int pointValue) {
+    Segment(double theta, int pointValue) {
         this.theta = theta;
         this.pointValue = pointValue;
     }
 
-    @Override
-    public String toString() {
-        return "Segment{" +
-                "theta=" + theta +
-                ", pointValue=" + pointValue +
-                '}';
-    }
-
-    public double getTheta() {
+    double getTheta() {
         return theta;
     }
 
-    public int getPointValue() {
+    int getPointValue() {
         return pointValue;
     }
 }
